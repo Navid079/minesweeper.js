@@ -6,7 +6,7 @@ A simple minesweeper game for web browsers.
 
 ## Demo
 
-You can play minesweeper using minesweeper.js right now without any programming knowlendge just by clicking [here](Navid079.github.io/minesweeper.js)
+You can play minesweeper using minesweeper.js right now without any programming knowlendge just by clicking [here](https://Navid079.github.io/minesweeper.js)
 
 ## Installation
 
