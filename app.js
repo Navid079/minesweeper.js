@@ -55,7 +55,7 @@ class Tile {
     this.isOpened = true;
 
     return {
-      status: !this.isMine,
+      safe: !this.isMine,
       message: this.isMine ? 'Game Over' : 'Correct',
     };
   }
@@ -102,8 +102,16 @@ class Game {
     canvas.height = config.height * config.h_size;
 
     this.config = config;
+
+    this.init();
+  }
+
+  init() {
     this.board = [];
     this.neigborDetails = [];
+
+    this.running = true;
+    this.lastRender = true;
 
     const mines = this.generateMines();
 
@@ -129,6 +137,8 @@ class Game {
       }
       this.board.push(row);
     }
+
+    this.tilesToOpen = this.config.width * this.config.height;
 
     for (let { x, y, value } of this.neigborDetails) {
       this.board[y][x].setNeigborMines(value);
@@ -159,6 +169,8 @@ class Game {
   }
 
   render() {
+    if (!this.running && !this.lastRender) return;
+    if (!this.running) this.lastRender = false;
     for (let row of this.board) {
       for (let tile of row) {
         tile.render(this.config.color, this.config.w_size, this.config.h_size);
@@ -167,6 +179,7 @@ class Game {
   }
 
   select(x, y) {
+    if (!this.running) return;
     const toOpen = [{ x, y }];
     while (toOpen.length > 0) {
       const { x, y } = toOpen.shift();
@@ -175,7 +188,13 @@ class Game {
         continue;
 
       if (this.board[y][x].isOpened) continue;
-      this.board[y][x].select();
+      const { safe } = this.board[y][x].select();
+      if (!safe) {
+        this.running = false;
+        console.log('Mine blown up');
+        return;
+      }
+      this.tilesToOpen--;
       if (this.board[y][x].getNeigborMines() === 0) {
         toOpen.push({ x: x - 1, y: y - 1 });
         toOpen.push({ x: x - 1, y });
@@ -197,6 +216,14 @@ class Game {
 
     this.select(tileX, tileY);
   }
+
+  tick() {
+    if (!this.running) return;
+    if (this.tilesToOpen === this.config.nMines) {
+      this.running = false;
+      console.log('Victorious');
+    }
+  }
 }
 
 function click(e) {
@@ -216,9 +243,13 @@ function start() {
 
   window.game = new Game(config);
   canvas.onclick = click;
-  canvas.oncontextmenu = e => e.preventDefault();
+  canvas.oncontextmenu = e => {
+    e.preventDefault();
+    game.init();
+  };
 
   setInterval(window.game.render.bind(window.game), 100);
+  setInterval(window.game.tick.bind(window.game), 300);
 }
 
 onload = start;
