@@ -1,8 +1,10 @@
+let canvas;
+
 const config = {
   width: 10,
   height: 10,
-  w_size: 20,
-  h_size: 20,
+  w_size: 30,
+  h_size: 30,
   nMines: 10,
   color: '#1a1a1a',
   border: '#a1a1a1',
@@ -55,10 +57,23 @@ class Tile {
   unflag() {
     this.isFlagged = false;
   }
+
+  render(color, border, w, h) {
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = color;
+    ctx.fillRect(w * this.x, h * this.y, w, h);
+    ctx.strokeStyle = border;
+    ctx.beginPath();
+    ctx.rect(w * this.x, h * this.y, w, h);
+    ctx.stroke();
+  }
 }
 
 class Game {
   constructor(config) {
+    canvas.width = config.width * config.w_size;
+    canvas.height = config.height * config.h_size;
+
     this.config = config;
     this.board = [];
 
@@ -89,13 +104,26 @@ class Game {
 
     return result.sort();
   }
+
+  render() {
+    for (let row of this.board) {
+      for (let tile of row) {
+        tile.render(
+          this.config.color,
+          this.config.border,
+          this.config.w_size,
+          this.config.h_size
+        );
+      }
+    }
+  }
 }
 
 function start() {
-  const canvas = document.getElementById('navid079:minesweeper');
+  canvas = document.getElementById('navid079:minesweeper');
   if (!canvas) return;
 
-  new Game(config);
+  window.game = new Game(config);
 }
 
 onload = start;
