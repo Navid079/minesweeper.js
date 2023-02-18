@@ -1,6 +1,12 @@
 # Minesweeper.js
 
+[![GitHub version](https://badge.fury.io/gh/Navid079%2Fminesweeper.js.svg)](https://badge.fury.io/gh/Navid079%2Fminesweeper.js)
+
 A simple minesweeper game for web browsers.
+
+## Demo
+
+You can play minesweeper using minesweeper.js right now without any programming knowlendge just by clicking [here](Navid079.github.io/minesweeper.js)
 
 ## Installation
 
@@ -47,4 +53,4 @@ And your ready!
 
 ## Contact and Contribution
 
-Please send your comments and suggestions to [my e-mail](mailto:navid.naseri.079@gmail.com) with title `minesweeper.js-<title>` or feel free to fork, commit, and send pull requests.
+Please send your comments, suggestions, and bug reports to [my e-mail](mailto:navid.naseri.079@gmail.com) with title `minesweeper.js-<title>` or feel free to fork, commit, and send pull requests.
