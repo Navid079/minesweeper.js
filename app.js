@@ -3,11 +3,17 @@ let canvas;
 const config = {
   width: 10,
   height: 10,
-  w_size: 30,
-  h_size: 30,
+  w_size: 70,
+  h_size: 70,
   nMines: 10,
-  color: '#1a1a1a',
-  border: '#a1a1a1',
+  color: {
+    unknown: '#1a1a1a',
+    opened: 'white',
+    mine: 'red',
+    flagged: 'purple',
+    border: '#a1a1a1',
+    label: 'black',
+  },
 };
 
 function randint(from, to) {
@@ -26,6 +32,8 @@ class Tile {
     this.y = y;
     this.isMine = isMine;
     this.isFlagged = false;
+    this.isOpened = false;
+    this.neigborMines = 0;
   }
 
   setNeigborMines(n) {
@@ -44,6 +52,8 @@ class Tile {
       };
     }
 
+    this.isOpened = true;
+
     return {
       status: !this.isMine,
       message: this.isMine ? 'Game Over' : 'Correct',
@@ -58,14 +68,31 @@ class Tile {
     this.isFlagged = false;
   }
 
-  render(color, border, w, h) {
+  render(color, w, h) {
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = color;
+    ctx.fillStyle = this.isOpened
+      ? this.isMine
+        ? color.mine
+        : color.opened
+      : this.isFlagged
+      ? color.flagged
+      : color.unknown;
     ctx.fillRect(w * this.x, h * this.y, w, h);
-    ctx.strokeStyle = border;
+    ctx.strokeStyle = color.border;
     ctx.beginPath();
     ctx.rect(w * this.x, h * this.y, w, h);
     ctx.stroke();
+
+    if (this.isOpened && this.neigborMines) {
+      ctx.beginPath();
+      ctx.fillStyle = color.label;
+      ctx.fillText(
+        this.neigborMines,
+        w * this.x + Math.floor(w / 2),
+        h * this.y + Math.floor(h / 2),
+        w
+      );
+    }
   }
 }
 
@@ -76,8 +103,23 @@ class Game {
 
     this.config = config;
     this.board = [];
+    this.neigborDetails = [];
 
     const mines = this.generateMines();
+
+    for (let m of mines) {
+      let x = m % config.width;
+      let y = Math.floor(m / config.width);
+
+      this.addNeigborMine(x - 1, y - 1);
+      this.addNeigborMine(x - 1, y);
+      this.addNeigborMine(x - 1, y + 1);
+      this.addNeigborMine(x, y - 1);
+      this.addNeigborMine(x, y + 1);
+      this.addNeigborMine(x + 1, y - 1);
+      this.addNeigborMine(x + 1, y);
+      this.addNeigborMine(x + 1, y + 1);
+    }
 
     for (let i = 0; i < config.height; i++) {
       const row = [];
@@ -88,8 +130,19 @@ class Game {
       this.board.push(row);
     }
 
-    console.log(mines);
-    console.log(this.board);
+    for (let { x, y, value } of this.neigborDetails) {
+      this.board[y][x].setNeigborMines(value);
+    }
+  }
+
+  addNeigborMine(x, y) {
+    if (x < 0 || y < 0 || x >= this.config.height || y >= this.config.width)
+      return;
+
+    const item = this.neigborDetails.find(item => item.x === x && item.y === y);
+    if (!item) return this.neigborDetails.push({ x, y, value: 1 });
+
+    item.value++;
   }
 
   generateMines() {
@@ -108,15 +161,53 @@ class Game {
   render() {
     for (let row of this.board) {
       for (let tile of row) {
-        tile.render(
-          this.config.color,
-          this.config.border,
-          this.config.w_size,
-          this.config.h_size
-        );
+        tile.render(this.config.color, this.config.w_size, this.config.h_size);
       }
     }
   }
+
+  select(x, y) {
+    const toOpen = [{ x, y }];
+    while (toOpen.length > 0) {
+      const { x, y } = toOpen.shift();
+
+      if (x < 0 || y < 0 || x >= this.config.height || y >= this.config.width)
+        continue;
+
+      if (this.board[y][x].isOpened) continue;
+      this.board[y][x].select();
+      if (this.board[y][x].getNeigborMines() === 0) {
+        toOpen.push({ x: x - 1, y: y - 1 });
+        toOpen.push({ x: x - 1, y });
+        toOpen.push({ x: x - 1, y: y + 1 });
+
+        toOpen.push({ x, y: y - 1 });
+        toOpen.push({ x, y: y + 1 });
+
+        toOpen.push({ x: x + 1, y: y - 1 });
+        toOpen.push({ x: x + 1, y });
+        toOpen.push({ x: x + 1, y: y + 1 });
+      }
+    }
+  }
+
+  click(x, y) {
+    const tileX = Math.floor(x / this.config.w_size);
+    const tileY = Math.floor(y / this.config.h_size);
+
+    this.select(tileX, tileY);
+  }
+}
+
+function click(e) {
+  e.preventDefault();
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  if (e.which === 3 || e.button === 2) return;
+
+  game.click(x, y);
 }
 
 function start() {
@@ -124,6 +215,10 @@ function start() {
   if (!canvas) return;
 
   window.game = new Game(config);
+  canvas.onclick = click;
+  canvas.oncontextmenu = e => e.preventDefault();
+
+  setInterval(window.game.render.bind(window.game), 100);
 }
 
 onload = start;
