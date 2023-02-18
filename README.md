@@ -1,6 +1,6 @@
 # Minesweeper.js
 
-[![GitHub version](https://badge.fury.io/gh/Navid079/minesweeper.js.svg)](https://badge.fury.io/gh/Navid079/minesweeper.js)
+[![GitHub version](https://badge.fury.io/gh/Navid079%2Fminesweeper.js.svg)](https://badge.fury.io/gh/Navid079%2Fminesweeper.js)
 
 A simple minesweeper game for web browsers.
 
