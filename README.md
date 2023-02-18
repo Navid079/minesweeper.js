@@ -1,6 +1,9 @@
 # Minesweeper.js
 
-[![GitHub version](https://badge.fury.io/gh/Navid079%2Fminesweeper.js.svg)](https://badge.fury.io/gh/Navid079%2Fminesweeper.js)
+![GitHub](https://img.shields.io/github/license/Navid079/minesweeper.js?style=for-the-badge)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/Navid079/minesweeper.js?label=version&sort=semver&style=for-the-badge)
+![GitHub file size in bytes on a specified ref (branch/commit/tag)](https://img.shields.io/github/size/Navid079/minesweeper.js/index.js?branch=v1.0.0&style=for-the-badge)
+![GitHub file size in bytes on a specified ref (branch/commit/tag)](https://img.shields.io/github/size/Navid079/minesweeper.js/index.min.js?branch=v1.0.0&label=minified&style=for-the-badge)
 
 A simple minesweeper game for web browsers.
 
