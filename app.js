@@ -3,6 +3,7 @@ const config = {
   height: 10,
   w_size: 20,
   h_size: 20,
+  nMines: 10,
   color: '#1a1a1a',
   border: '#a1a1a1',
 };
@@ -57,30 +58,36 @@ class Tile {
 }
 
 class Game {
-  constructor(w, h, nMines) {
+  constructor(config) {
+    this.config = config;
     this.board = [];
 
-    const mines = this.generateMines(w, h, nMines);
+    const mines = this.generateMines();
 
-    for (let i = 0; i < h; i++) {
+    for (let i = 0; i < config.height; i++) {
       const row = [];
-      for (let j = 0; j < w; j++) {
-        row.push(new Tile(j, i));
+      for (let j = 0; j < config.width; j++) {
+        const index = i * config.width + j;
+        row.push(new Tile(j, i, mines.includes(index)));
       }
+      this.board.push(row);
     }
+
+    console.log(mines);
+    console.log(this.board);
   }
 
-  generateMines(w, h, nMines) {
-    const count = w * h;
+  generateMines() {
+    const count = this.config.width * this.config.height;
     const values = range(0, count, 1);
     const result = [];
-    for (let i = nMines - 1; i >= 0; i--) {
-      const index = randint(0, i);
+    for (let i = 0; i < this.config.nMines; i++) {
+      const index = randint(0, values.length);
       const [value] = values.splice(index, 1);
       result.push(value);
     }
 
-    return result;
+    return result.sort();
   }
 }
 
@@ -88,7 +95,7 @@ function start() {
   const canvas = document.getElementById('navid079:minesweeper');
   if (!canvas) return;
 
-  new Game(10, 10, 10);
+  new Game(config);
 }
 
 onload = start;
