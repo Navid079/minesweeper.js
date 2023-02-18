@@ -187,7 +187,7 @@ class Game {
       if (x < 0 || y < 0 || x >= this.config.height || y >= this.config.width)
         continue;
 
-      if (this.board[y][x].isOpened) continue;
+      if (this.board[y][x].isOpened || this.board[y][x].isFlagged) continue;
       const { safe } = this.board[y][x].select();
       if (!safe) {
         this.running = false;
@@ -217,6 +217,14 @@ class Game {
     this.select(tileX, tileY);
   }
 
+  flag(x, y) {
+    const tileX = Math.floor(x / this.config.w_size);
+    const tileY = Math.floor(y / this.config.h_size);
+
+    const tile = this.board[tileY][tileX];
+    tile.isFlagged ? tile.unflag() : tile.flag();
+  }
+
   tick() {
     if (!this.running) return;
     if (this.tilesToOpen === this.config.nMines) {
@@ -237,6 +245,15 @@ function click(e) {
   game.click(x, y);
 }
 
+function flag(e) {
+  e.preventDefault();
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  game.flag(x, y);
+}
+
 function start() {
   canvas = document.getElementById('navid079:minesweeper');
   if (!canvas) return;
@@ -245,7 +262,7 @@ function start() {
   canvas.onclick = click;
   canvas.oncontextmenu = e => {
     e.preventDefault();
-    game.init();
+    flag(e);
   };
 
   setInterval(window.game.render.bind(window.game), 100);
