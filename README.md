@@ -21,7 +21,7 @@ Play Minesweeper using Minesweeper.js right now without any programming knowledg
    <!-- <script src="https://cdn.jsdelivr.net/gh/Navid079/minesweeper.js/index.min.js"></script> -->
    ```
 
-Create a <canvas> element with id="navid079:minesweeper".
+Create a `<canvas>` element with id="navid079:minesweeper".
 Configure and start the game:
 
 ```js
