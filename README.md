@@ -5,20 +5,24 @@
 ![GitHub file size in bytes on a specified ref (branch/commit/tag)](https://img.shields.io/github/size/Navid079/minesweeper.js/index.js?branch=v1.0.0&style=for-the-badge)
 ![GitHub file size in bytes on a specified ref (branch/commit/tag)](https://img.shields.io/github/size/Navid079/minesweeper.js/index.min.js?branch=v1.0.0&label=minified&style=for-the-badge)
 
-A simple minesweeper game for web browsers.
+A simple Minesweeper game for web browsers.
 
 ## Demo
 
-You can play minesweeper using minesweeper.js right now without any programming knowlendge just by clicking [here](https://Navid079.github.io/minesweeper.js)
+Play Minesweeper using Minesweeper.js right now without any programming knowledge! Just click [here](https://Navid079.github.io/minesweeper.js) to start playing.
 
 ## Installation
 
-1. Add this to your code  
-   `<script src="https://cdn.jsdelivr.net/gh/Navid079/minesweeper.js/index.js">`  
-   or minified version (About 2.9 KB)  
-   `<script src="https://cdn.jsdelivr.net/gh/Navid079/minesweeper.js/index.min.js"`
-2. create a `canvas` with `id="navid079:minesweeper"`
-3. Configure and start the game:
+1. Add the following code to your HTML file:
+
+   ```html
+   <script src="https://cdn.jsdelivr.net/gh/Navid079/minesweeper.js/index.js"></script>
+   <!-- or minified version (About 2.9 KB) -->
+   <!-- <script src="https://cdn.jsdelivr.net/gh/Navid079/minesweeper.js/index.min.js"></script> -->
+   ```
+
+Create a <canvas> element with id="navid079:minesweeper".
+Configure and start the game:
 
 ```js
 const config = {
@@ -40,20 +44,20 @@ const config = {
 
 minesweeper.start(config);
 ```
-
-And your ready!
+And you're ready to go!
 
 ## Versions
 
-- 1.0.0  
-  Initial release
+- 1.0.0: Initial release
 
 ## Future Updates
 
-- [ ] Add timer
-- [ ] Add game signals (reset, ...)
+- [ ] Add a timer
+- [ ] Implement game signals (reset, etc.)
 - [ ] Add sprite support
 
 ## Contact and Contribution
 
-Please send your comments, suggestions, and bug reports to [my e-mail](mailto:navid.naseri.079@gmail.com) with title `minesweeper.js-<title>` or feel free to fork, commit, and send pull requests.
+Please send your comments, suggestions, and bug reports to [my e-mail](mailto:navid.naseri.079@gmail.com) with the subject `minesweeper.js-<title>`. Feel free to fork, commit, and send pull requests.
+
+Let's make Minesweeper.js better together!
